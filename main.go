@@ -7,15 +7,32 @@ import (
 
 func main() {
 
-	if len(os.Args) > 1 {
-		fmt.Println("gate is Active")
-		os.Exit(0)
-	} else {
-		fmt.Fprintln(os.Stderr, "Use: gate <command>")
+	if err := runCommand(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
+
+}
+func runCommand() error {
+
+	if len(os.Args) < 2 {
+		return fmt.Errorf("use: gate <command>")
+	}
+
+	return subcommandHandler(os.Args[1])
 }
 
-func listCommands() {
-	fmt.Printf("")
+func subcommandHandler(subcommand string) error {
+
+	switch subcommand {
+	case "help":
+		fmt.Println("This is help Command")
+	case "hello":
+		fmt.Println("gate says Hello")
+	default:
+		return fmt.Errorf("unknown or invalid gate command: %s\nSee `gate help` to see commands", subcommand)
+	}
+
+	return nil
+
 }
