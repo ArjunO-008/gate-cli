@@ -1,0 +1,49 @@
+# Go binaries 
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.out
+*.test
+
+# Build output
+/bin/
+/build/
+/dist/
+
+# Go workspace
+go.work
+go.work.sum
+
+
+vendor/
+
+# Logs
+*.log
+
+# ===== Coverage & profiling =====
+*.coverprofile
+*.cov
+*.prof
+
+# Environment files 
+.env
+.env.*
+!.env.example
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Linux
+*~
