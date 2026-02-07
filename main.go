@@ -3,11 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"gate/cmd"
 	"os"
 	"path/filepath"
 )
-
-var gateVersion string = "v0.0.1"
 
 type Config struct {
 	Version  string   `json:"version"`
@@ -58,9 +57,9 @@ func subcommandHandler(subcommand string) error {
 
 	switch subcommand {
 	case "help":
-		defineHelpCommand()
+		cmd.DefineHelpCommand()
 	case "version":
-		showGateVersion()
+		cmd.ShowGateVersion()
 	case "init":
 		initCommandHandler()
 	case "config":
@@ -144,28 +143,4 @@ func initCommandHandler() error {
 	}
 
 	return nil
-}
-
-func defineHelpCommand() {
-	fmt.Println("GATE - Automation CLI")
-	fmt.Println()
-	fmt.Println("USAGE:")
-	fmt.Println("  gate <command>")
-	fmt.Println()
-	fmt.Println("COMMANDS:")
-	fmt.Println("  help            Show this help message")
-	fmt.Println("  version         Show gate version")
-	fmt.Println()
-	fmt.Println("SETUP:")
-	fmt.Println("  init            Initialize gate config directory")
-	fmt.Println("  config path     Show config directory path")
-	fmt.Println("  config list     Show all configuration files")
-	fmt.Println()
-	fmt.Println("EXECUTION:")
-	fmt.Println("  run             Execute steps sequentially")
-	fmt.Println()
-}
-
-func showGateVersion() {
-	fmt.Printf("gate version %s\n", gateVersion)
 }
