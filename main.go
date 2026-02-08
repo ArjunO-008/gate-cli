@@ -20,10 +20,11 @@ func runCommand() error {
 		return fmt.Errorf("use: gate <command>")
 	}
 
-	return subcommandHandler(os.Args[1])
+	args := os.Args[1:]
+	return subcommandHandler(os.Args[1], args)
 }
 
-func subcommandHandler(subcommand string) error {
+func subcommandHandler(subcommand string, arguments []string) error {
 
 	switch subcommand {
 	case "help":
@@ -31,9 +32,15 @@ func subcommandHandler(subcommand string) error {
 	case "version":
 		cmd.ShowGateVersion()
 	case "init":
-		cmd.InitCommandHandler()
+		if err := cmd.InitCommandHandler(); err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
 	case "config":
-		fmt.Println("gate says Hello")
+		if err := cmd.ConfigCommandHandler(os.Args[2:]); err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
 	case "run":
 		fmt.Println("gate says Hello")
 	default:
