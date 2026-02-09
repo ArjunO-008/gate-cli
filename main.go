@@ -20,7 +20,7 @@ func runCommand() error {
 		return fmt.Errorf("use: gate <command>")
 	}
 
-	args := os.Args[1:]
+	args := os.Args[2:]
 	return subcommandHandler(os.Args[1], args)
 }
 
@@ -37,7 +37,7 @@ func subcommandHandler(subcommand string, arguments []string) error {
 			os.Exit(1)
 		}
 	case "config":
-		if err := cmd.ConfigCommandHandler(os.Args[2:]); err != nil {
+		if err := cmd.ConfigCommandHandler(arguments); err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
