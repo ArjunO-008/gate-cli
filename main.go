@@ -41,6 +41,11 @@ func subcommandHandler(subcommand string, arguments []string) error {
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
+	case "add":
+		if err := cmd.AddCommandHandler(arguments); err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
 	case "run":
 		fmt.Println("gate says Hello")
 	default:
