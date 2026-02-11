@@ -121,7 +121,12 @@ func addFileToConfigDir(files []string, configFilePath string) error {
 			return fmt.Errorf("failed to write file to config dir: %w", err)
 		}
 
-		index[name] = "./" + fileName
+		absPath, err := filepath.Abs(destPath)
+		if err != nil {
+			return fmt.Errorf("failed to resolve absolute path: %w", err)
+		}
+
+		index[name] = absPath
 		fmt.Printf("Success fully added %s as %s\n", file, name)
 
 	}

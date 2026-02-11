@@ -3,6 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"gate/models"
 	"os"
 	"path/filepath"
 )
@@ -17,11 +18,51 @@ func RunCommandHandler(arguments []string) error {
 		return err
 	}
 	fmt.Println(configFilePath)
+	err = executeConfig(configFilePath)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
 func executeConfig(userConfigFile string) error {
+
+	data, err := os.ReadFile(userConfigFile)
+	if err != nil {
+		return fmt.Errorf("failed to read config file %q: %w", userConfigFile, err)
+	}
+
+	var config models.Config
+	err = json.Unmarshal(data, &config)
+	if err != nil {
+		return fmt.Errorf("invalid JSON in config file %q: %w", userConfigFile, err)
+	}
+
+	if len(config.Steps) == 0 {
+		return fmt.Errorf("no steps found for config %q", config.Name)
+	}
+
+	for _, step := range config.Steps {
+
+		switch step.Type {
+		case "executable":
+			if err := runExecutable(step); err != nil {
+				return fmt.Errorf("step %q failed: %w", step, err)
+			}
+
+		case "shellexecutable":
+			if err := runShellexecutable(step); err != nil {
+				return fmt.Errorf("step %q failed: %w", step, err)
+			}
+
+		default:
+			return fmt.Errorf("invalid step type %q", step.Type)
+
+		}
+
+	}
+
 	return nil
 }
 
@@ -54,7 +95,7 @@ func readtIndexFile(fileIdentifier string) (string, error) {
 		if os.IsNotExist(err) {
 			return "", fmt.Errorf(".index.json does not exist, run gate init")
 		}
-		return "", nil
+		return "", fmt.Errorf("failed to stat .index.json: %w", err)
 	}
 
 	userConfigIdentifier, err := os.ReadFile(indexPath)
@@ -74,4 +115,13 @@ func readtIndexFile(fileIdentifier string) (string, error) {
 
 	return path, nil
 
+}
+
+func runExecutable(step models.Step) error {
+	println(step.Args, step.Command)
+	return nil
+}
+func runShellexecutable(step models.Step) error {
+	println(step.Args, step.Command)
+	return nil
 }
