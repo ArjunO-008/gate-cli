@@ -47,7 +47,11 @@ func subcommandHandler(subcommand string, arguments []string) error {
 			os.Exit(1)
 		}
 	case "run":
-		fmt.Println("gate says Hello")
+		if err := cmd.RunCommandHandler(arguments); err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
+
 	default:
 		return fmt.Errorf("unknown or invalid gate command: %s\nSee `gate help` to see commands", subcommand)
 	}
