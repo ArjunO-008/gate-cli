@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"gate/models"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
+	"strings"
 )
 
 func RunCommandHandler(arguments []string) error {
@@ -43,16 +46,21 @@ func executeConfig(userConfigFile string) error {
 		return fmt.Errorf("no steps found for config %q", config.Name)
 	}
 
+	workingDir := config.Settings.WorkingDirectory
+	if workingDir == "" {
+		workingDir = "."
+	}
+
 	for _, step := range config.Steps {
 
 		switch step.Type {
 		case "executable":
-			if err := runExecutable(step); err != nil {
+			if err := runExecutable(step, workingDir); err != nil {
 				return fmt.Errorf("step %q failed: %w", step, err)
 			}
 
 		case "shellexecutable":
-			if err := runShellexecutable(step); err != nil {
+			if err := runShellexecutable(step, workingDir); err != nil {
 				return fmt.Errorf("step %q failed: %w", step, err)
 			}
 
@@ -117,11 +125,50 @@ func readtIndexFile(fileIdentifier string) (string, error) {
 
 }
 
-func runExecutable(step models.Step) error {
-	println(step.Args, step.Command)
+func runExecutable(step models.Step, workingDir string) error {
+	args := strings.Fields(step.Args)
+	exeCmd := exec.Command(step.Command, args...)
+
+	if step.Dir != "" {
+		exeCmd.Dir = filepath.Join(workingDir, step.Dir)
+	} else {
+		exeCmd.Dir = workingDir
+	}
+
+	exeCmd.Stdout = os.Stdout
+	exeCmd.Stderr = os.Stderr
+	exeCmd.Stdin = os.Stdin
+	fmt.Printf("Running: %s %s\n", step.Command, step.Args)
+	err := exeCmd.Run()
+	if err != nil {
+		return fmt.Errorf("command %q failed: %w", step.Command, err)
+	}
+
 	return nil
 }
-func runShellexecutable(step models.Step) error {
-	println(step.Args, step.Command)
+func runShellexecutable(step models.Step, workingDir string) error {
+	var shellCmd *exec.Cmd
+
+	if runtime.GOOS == "windows" {
+		shellCmd = exec.Command("cmd", "/C", step.Command)
+	} else {
+		shellCmd = exec.Command("sh", "-c", step.Command)
+	}
+
+	if step.Dir != "" {
+		shellCmd.Dir = filepath.Join(workingDir, step.Dir)
+	} else {
+		shellCmd.Dir = workingDir
+	}
+
+	shellCmd.Stdout = os.Stdout
+	shellCmd.Stderr = os.Stderr
+	shellCmd.Stdin = os.Stdin
+
+	err := shellCmd.Run()
+	if err != nil {
+		return fmt.Errorf("shell command %q failed: %w", step.Command, err)
+	}
+
 	return nil
 }
