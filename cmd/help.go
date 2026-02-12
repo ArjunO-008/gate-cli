@@ -19,5 +19,7 @@ func DefineHelpCommand() {
 	fmt.Println()
 	fmt.Println("EXECUTION:")
 	fmt.Println("  run             Execute steps sequentially")
+	fmt.Println("  edit            Open file in default editor")
+	fmt.Println("  delete          Delete file sequentially")
 	fmt.Println()
 }
