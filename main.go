@@ -51,6 +51,11 @@ func subcommandHandler(subcommand string, arguments []string) error {
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
+	case "delete":
+		if err := cmd.DeleteCommandHandler(arguments); err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
 
 	default:
 		return fmt.Errorf("unknown or invalid gate command: %s\nSee `gate help` to see commands", subcommand)
