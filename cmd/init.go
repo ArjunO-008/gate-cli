@@ -63,21 +63,16 @@ func InitCommandHandler() error {
 		Steps: []models.Step{
 			{
 				Type:    "executable",
-				Command: "npm",
-				Args:    "install",
-				Dir:     "project",
+				Command: "gate",
+				Args:    "version",
+				Dir:     ".",
 			},
 			{
 				Type:    "shellexecutable",
-				Command: "echo Build completed successfully",
+				Command: "echo gate-cli runs successfully",
 			},
 		},
-		Extras: models.Extras{
-			Git: models.GitExtras{
-				Enabled: false,
-				Config:  "gitConfig",
-			},
-		},
+		
 	}
 
 	if config.Name == "" {

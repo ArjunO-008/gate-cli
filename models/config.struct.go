@@ -5,7 +5,6 @@ type Config struct {
 	Name     string   `json:"name"`
 	Settings Settings `json:"settings"`
 	Steps    []Step   `json:"steps"`
-	Extras   Extras   `json:"extras"`
 }
 
 type Settings struct {
@@ -17,13 +16,4 @@ type Step struct {
 	Command string `json:"command"`
 	Args    string `json:"args,omitempty"`
 	Dir     string `json:"dir,omitempty"`
-}
-
-type Extras struct {
-	Git GitExtras `json:"git"`
-}
-
-type GitExtras struct {
-	Enabled bool   `json:"enabled"`
-	Config  string `json:"config"`
 }

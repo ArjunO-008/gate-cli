@@ -20,7 +20,7 @@ func RunCommandHandler(arguments []string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(configFilePath)
+	
 	err = executeConfig(configFilePath)
 	if err != nil {
 		return err
