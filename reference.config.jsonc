@@ -1,0 +1,39 @@
+{
+  // Config file format version (used for compatibility checks)
+  "version": "0.1.0",
+
+  //IMPORTANT: Name of the configuration (for identification only)
+  "name": "sampleconfig",
+
+  "settings": {
+    // Base directory where all steps will be executed
+    // "." refers to the current directory
+    "workingDirectory": "."
+  },
+
+  "steps": [
+    {
+      // Step execution type
+      // "executable" runs a system executable directly
+      "type": "executable",
+
+      // Executable command to run
+      "command": "gate",
+
+      // Arguments passed to the command
+      // Supports only string values
+      "args": "version",
+
+      // Directory in which this command will run
+      "dir": "."
+    },
+    {
+      // Executes a shell-based command
+      // Useful for echo, scripts, and chained commands
+      "type": "shellexecutable",
+
+      // Shell command to execute
+      "command": "echo Build completed successfully"
+    }
+  ]
+}
